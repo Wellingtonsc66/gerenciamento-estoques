@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Estoque\EstoqueController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,11 +14,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::redirect('/', '/login');
 
-Route::group(['namespace'=>'App\Http\Controllers\Acesso'] ,function (){
-    Route::get ('/', 'ListaEstoqueController@index')->name('index');
-    Route::match(['get', 'post'], '/cadastrar/{login?}', 'LivreDoacoesController@cadastrar')->name('cadastrar');
-    Route::get('/novidades', 'LivreDoacoesController@novidades')->name('novidades');
-    Route::get('/sobre', 'LivreDoacoesController@sobre')->name('sobre');
-    Route::post('/recuperar-password', 'LivreDoacoesController@recuperaSenha');
+Route::group(['prefix'=>'dashboard', 'namespace'=>'office', 'middleware'=>'auth'], function (){
+    Route::get('/', function () {
+        return view('dashboard');
+    })->name('dashboard');
+
+    Route::get('/estoque/adicionar', [EstoqueController::class, 'adicionar'])->name('estoque.adicionar');
+    Route::get('/estoque/baixar', [EstoqueController::class, 'baixar'])->name('estoque.baixar');
+    Route::get('/estoque/relatorio', [EstoqueController::class, 'relatorio'])->name('estoque.relatorio');
 });
+
+require __DIR__.'/auth.php';
