@@ -15,7 +15,7 @@ class CreateProdutosDatasTable extends Migration
     {
         Schema::create('produtos_datas', function (Blueprint $table) {
             $table->id('produto_data_id');
-            $table->unsignedBigInteger('usuario_id');
+            $table->unsignedBigInteger('usuario_id')->nullable();
             $table->unsignedBigInteger('produto_id');
             $table->integer('produto_data_qnt');
             $table->dateTime('produto_data_data');
