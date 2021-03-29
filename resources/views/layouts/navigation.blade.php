@@ -1,3 +1,66 @@
+<script src="{{asset('js/jquery-3.3.1.min.js')}}"></script>
+<style>
+    .table-p{
+        width: 100%;
+        margin: 20px 0;
+        border: 1px solid #e2e2e2;
+        border-collapse: collapse;
+        cursor: default;
+        box-shadow: 0 1px 1px rgb(0 0 0/5%);
+        text-align: center;
+    }
+    .table-p thead tr {
+        border-radius: 3px;
+        background: #fdfdfd;
+        background: -webkit-gradient(linear,left top,left bottom,color-stop(2%,#fdfdfd),color-stop(100%,#fbfbfb));
+        background: -webkit-linear-gradient(top,#fdfdfd 2%,#fbfbfb 100%);
+        background: linear-gradient(to bottom,#fdfdfd 2%,#fbfbfb 100%);
+        color: #313538;
+        font: 13px Arial, Helvetica, sans-serif;
+        font-weight: bolder;
+        text-align: center;
+    }
+    .table-p tr {
+        -webkit-transition: background-color .2s ease;
+        transition: background-color .2s ease;
+        border-bottom: 1px solid #e2e2e2;
+    }
+    .table-p td {
+        padding: 5px 7px;
+        line-height: 1.5;
+        border-right: 1px solid #e2e2e2;
+    }
+    .table-p tbody tr:hover {
+        background: #f2f9fb;
+        color: #62748b;
+    }
+    .b-promo {
+        position: relative;
+        margin: 20px 0;
+        padding: 15px 25px 15px 25px;
+        box-shadow: 0 1px 3px rgba(0,0,0,.02);
+        background: #fff;
+        background: -webkit-gradient(linear,left top,left bottom,color-stop(2%,#fff),color-stop(100%,#fbfbfb));
+        background: -webkit-linear-gradient(top,#fff 2%,#fbfbfb 100%);
+        background: linear-gradient(to bottom,#fff 2%,#fbfbfb 100%);
+        border-radius: 0 3px 3px 0;
+        border: 1px solid #e2e2e2;
+        border-left: 0;
+        cursor: default;
+    }
+    .b-promo:before {
+        content: '';
+        position: absolute;
+        top: -1px;
+        left: 0;
+        bottom: -1px;
+        border-left: 2px solid #1480dd;
+    }
+    .no-atrr {
+        font-size: larger;
+        font-weight: bolder;
+    }
+</style>
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -34,6 +97,41 @@
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ml-6">
+                <div class="hidden sm:flex sm:items-center sm:ml-6 mr-2">
+                    <x-dropdown align="right" width="48">
+                        @php
+                            $produtos = new \App\Models\Produto();
+                            $produtos = $produtos->where('produto_qnt', '<', 100)->get()->toArray();
+                        @endphp
+                        <x-slot name="trigger">
+                            @if($produtos)
+                                <figure style="width: 9px;border-radius: 20px;height: 9px;left: 15px;top: 15px;position: absolute;background: #df4a32;" class="notificacao"></figure>
+                            @endif
+                            <button class="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
+                                <div style="width: 25px">
+                                    <img src="{{asset('img/nav-bar/icon_sin.png')}}">
+                                </div>
+                            </button>
+                        </x-slot>
+
+                        <x-slot name="content">
+                            @if(!$produtos)
+                                <x-dropdown-link>
+                                    Não há notificações!
+                                </x-dropdown-link>
+                            @else
+                                <x-dropdown-link>
+                                    Estoque Baixo!!
+                                    <ul>
+                                        @foreach($produtos as $cada_prod)
+                                            <li>Produto: {{$cada_prod['produto_nome']}} :: Quantidade: {{$cada_prod['produto_qnt']}}</li>
+                                        @endforeach
+                                    </ul>
+                                </x-dropdown-link>
+                            @endif
+                        </x-slot>
+                    </x-dropdown>
+                </div>
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
